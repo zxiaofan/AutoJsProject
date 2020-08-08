@@ -106,10 +106,14 @@ main_fun.main_method = function main_method(method, boolThread, waterThreshold, 
 
 function checkUpdateFun(version) {
     var response = null;
-
+    toastLog("检查更新中");
     // toastLog("获取新版本号：" + versionUrl);
     threads.start(function () {
-        var r = http.get(versionUrl, {}, function (res, err) {
+        var reqUrl = versionUrl;
+        if (reqUrl.indexOf("zxiaofan") > -1) {
+            reqUrl += "?version=" + version + "?uid=" + util.getStorage("uid");
+        }
+        var r = http.get(reqUrl, {}, function (res, err) {
             if (err) {
                 console.error(err);
                 return;
@@ -117,28 +121,28 @@ function checkUpdateFun(version) {
             response = res;
         });
     });
-    let timeOutTimes = 100;
+    let timeOutTimes = 20;
     for (let i = 0; i < timeOutTimes; i++) {
         if (response == null) {
-            sleep(100);
-            toastLog("sleep" + i);
+            sleep(200);
+            toastLog("查询最新版本ing：" + i);
         } else {
             break;
         }
     }
     var versionEsc = null;
     // toastLog("response:" + response);P
-    if (response.statusCode >= 200 && response.statusCode < 300) {
+    if (response.statusCode >= 200 && response.statusCode <= 304) {
         versionEsc = response.body.string();
     } else {
         toastLog("检查更新失败，请前往订阅号zxiaofan回复关键字【蚂蚁森林】获取最新版APP");
     }
 
-    toastLog("【当前版本】" + version + ";【服务器版本】" + versionEsc);
     sleep(2000);
     if (version.length >= 12 && versionEsc.length >= 12 && version.substring(0, 12) == versionEsc.substring(0, 12)) {
         toastLog("当前已是最新版");
     } else {
+        toastLog("【当前版本】" + version + ";【服务器版本】" + versionEsc);
         var info = "APP已更新，请前往订阅号zxiaofan回复关键字【蚂蚁森林】获取最新版APP：" + versionEsc;
         dialogs.confirm(info);
     }
@@ -234,7 +238,7 @@ function quliulan() {
 }
 
 function shopSign() {
-   // 历史版本暂不开源，今年双11开源
+    // 历史版本暂不开源，今年双11开源
 }
 
 function tjmb() {
@@ -243,7 +247,7 @@ function tjmb() {
 }
 function getOwnMiaoBi() {
     sleep(1000);
-   
+
 }
 
 module.exports = main_fun;

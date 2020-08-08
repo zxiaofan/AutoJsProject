@@ -1,70 +1,76 @@
 "ui";
 var height = device.height;
 var width = device.width;
-var version = "202005031200 支持收取支付宝最新版（五一）好友能量球,蚂蚁森林一条龙";
+var version = "202008082230";
+var versionDesc = "逻辑优化，支持新版浇水";
+
 var main = {};
 ui.layout(
     <vertical>
 
         <text marginTop="50px" gravity="center" textSize="20sp" id="kj_aboutThis" text="zxiaofan制作，欢迎前往订阅号zxiaofan交流" />
-        <button marginTop="50px" id="kj_findMe" text="联系我" textColor="red" textSize="20sp" />
+        <button marginTop="30px" id="kj_findMe" text="联系我" textColor="red" textSize="20sp" />
 
-        <button marginTop="50px" id="kj_about" text="使用说明，必看" textColor="red" />
+        <button marginTop="30px" id="kj_about" text="使用说明，必看" textColor="red" />
         {/* <button marginTop="100px" id="kj_miaobi" text="开始领喵币" /> */}
         {/* <button  id="kj_tbnl" text="双十二 领淘宝能量" /> */}
         <horizontal>
-            <text marginLeft="10px" text="每收取 " marginTop="50px" />
+            <text marginLeft="10px" text="每收取 " marginTop="30px" />
             <input id="kj_waterThreshold" marginTop="50px" inputType="number" text="30" />
             <text text=" g能量，自动浇水" marginTop="50px" />
             <input id="kj_waterPlanNum" marginTop="50px" inputType="number" text="10" />
             <text text=" g" marginTop="50px" />
             <text text="，单次浇水最小" marginTop="50px" />
             <input id="kj_waterMinUnit" marginTop="50px" inputType="number" text="10" />
-            <text text=" g"  marginTop="50px" />
-           
+            <text text=" g" marginTop="50px" />
+
         </horizontal>
-         <horizontal>
-                      
+        <horizontal>
+
             <text text="好友能量球X坐标最大值：" marginTop="10px" />
             <input id="kj_friendXmax" marginTop="10px" inputType="number" text="900" />
             <text text="；Y坐标最大值：" marginTop="10px" />
             <input id="kj_friendYmax" marginTop="10px" inputType="number" text="810" />
-        </horizontal> 
-        <horizontal>
+        </horizontal>
+        {/* <horizontal>
             <text text="浇水按钮横坐标X：" marginTop="10px" />
             <input id="kj_waterPointX" marginTop="10px" inputType="number" text="980" />
             <text text="；浇水按钮纵坐标Y：" marginTop="10px" />
             <input id="kj_waterPointY" marginTop="10px" inputType="number" text="1500" />
-        </horizontal> 
+        </horizontal>  */}
 
         <horizontal>
 
-            <checkbox marginLeft="50px" marginTop="50px" id="kj_select_ant" text="收取蚂蚁森林能量" />
-            <checkbox marginTop="50px" id="kj_select_water" text="收能量-浇水" checked="true" />
+            <checkbox marginLeft="30px" marginTop="50px" id="kj_select_ant" text="收取蚂蚁森林能量" />
+            <checkbox marginTop="30px" id="kj_select_water" text="收能量And浇水" checked="true" />
         </horizontal>
         <horizontal>
-            <checkbox marginLeft="50px" marginTop="50px" id="kj_select_领取支付宝积分" text="领取支付宝积分" checked="true" />
-            <checkbox marginTop="50px" id="kj_select_显示悬浮窗" text="显示悬浮窗" checked="false" />
+            <checkbox marginLeft="30px" marginTop="50px" id="kj_select_领取支付宝积分" text="领取支付宝积分" checked="true" />
+            <checkbox marginTop="30px" id="kj_select_显示悬浮窗" text="显示悬浮窗" checked="false" />
             {/* <checkbox marginTop="50px" id="kj_select_收取淘宝双十二能量" text="收取淘宝双十二能量" /> */}
         </horizontal>
         <button marginTop="30px" id="kj_all" text="一条龙（点击此处执行）" textColor="red" textSize="20sp" />
         {/* <input marginTop="100px" id="kj_input" text="这是一个输入框" /> */}
 
-        <button marginTop="50px" id="kj_checkUpdate" text="【检查更新】" version="3.0" bg="#00ff00" textSize="20sp" />
-        <button marginTop="50px" id="kj_close" text="关闭软件" />
+        <button marginTop="30px" id="kj_checkUpdate" text="【检查更新】" bg="#00ff00" textSize="20sp" />
+        <button marginTop="30px" id="kj_close" text="关闭软件" />
+        <button id="kj_resetParam" text="恢复默认参数配置" />
         <horizontal>
-            <button marginTop="50px" id="kj_openConsole" text="打开日志窗口" />
-            <button marginTop="50px" marginLeft="100px" id="kj_closeConsole" text="关闭日志窗口" />
-            <button marginTop="50px" marginLeft="150px" id="kj_clearLog" text="清理日志" />
+            <button marginTop="30px" id="kj_openConsole" text="打开日志窗口" />
+            <button marginTop="30px" marginLeft="100px" id="kj_closeConsole" text="关闭日志窗口" />
+            <button marginTop="30px" marginLeft="150px" id="kj_clearLog" text="清理日志" />
         </horizontal>
     </vertical>
 );
 toastLog(ui.kj_aboutThis.getText());
-initData();
 
 // engines.execScriptFile("main_ant_miaobi.js");
 var module_main_fun = require("./main_fun.js");
+var module_util = require("./util.js");
 
+initData();
+
+module_main_fun.checkUpdate(version);
 
 ui.kj_findMe.click(() => {
 
@@ -113,6 +119,7 @@ ui.kj_closeConsole.click(() => {
     });
 });
 
+
 ui.kj_clearLog.click(() => {
 
     threads.start(function () {
@@ -122,12 +129,22 @@ ui.kj_clearLog.click(() => {
 });
 
 
+ui.kj_resetParam.click(() => {
+
+    toastLog("恢复默认参数配置");
+    module_util.clearStorage();
+    resetUIData();
+    setStorageData();
+
+});
+
+
 ui.kj_about.click(() => {
     let info = "" +
         "1、APP需要打开以下权限：无障碍服务权限、后台弹出界面；\n\n" +
         "    权限必须提前打开，否则可能执行失败；\n\n" +
         "    权限必须提前打开！！！\n\n" +
-        "2、更新说明：202005031200支持收取支付宝最新版能量球；\n\n" +
+        "2、更新说明：20200808支持新版浇水；\n\n" +
         "3、【支付宝会员领积分】:\n" +
         // "    2.1、浏览店铺领喵币；\n" +
         // "    2.2、天降喵币；\n" +
@@ -138,9 +155,9 @@ ui.kj_about.click(() => {
         "    4.1、收取蚂蚁森林能量需要申请截图权限，弹出提示框时同意即可；\n\n" +
         "    4.2、基于控件坐标位置收取能量，适用于所有分辨率的手机；\n\n" +
         "    4.3、支持收取能量同时给好友浇水（默认每收取该好友30g能量，则浇水10g）；\n\n" +
-        "    4.4、收能量已改版，每天最多浇水3次，实际浇水优先级：18g>10g>5g>1g；\n\n" +
-        "        如计划浇水10g，则实际浇水10g1次；计划浇水20g，则实际浇水18g1次+1g2次；\n\n" +
-        "        计划浇水30g，则实际浇水18g1次+10g1次+1g1次；计划浇水40g，则实际浇水18g2次+1g1次；\n\n" +
+        "    4.4、收能量已改版，每天最多浇水3次，实际浇水优先级：66g>33g>18g>10g；\n\n" +
+        "        如计划浇水10g，则实际浇水10g 1次；计划浇水30g，则实际浇水18g1次+10g1次；\n\n" +
+        "        计划浇水80g，则实际浇水66g1次+10g1次；\n\n" +
 
         "5、【日志】:\n" +
         "    5.1、如果使用有bug，可在使用后“打开日志窗口”，分析日志；\n\n" +
@@ -204,7 +221,7 @@ ui.kj_all.click(() => {
     //     var dis_result =  module_main_fun.ant_main(ui.kj_HiAntCount.getText());
     //     dis_result.blockedGet();
     // }
-    setData();
+    setStorageData();
     var thread = threads.start(function () {
 
         if (ui.kj_select_显示悬浮窗.isChecked()) {
@@ -284,14 +301,14 @@ ui.kj_close.click(() => {
 //     return ui.kj_friendYmax.getText();
 // };
 
-function setData(){
+function setStorageData() {
     var storage = storages.create("zxiaofan:ant");
-    
+
     storage.put("kj_waterThreshold", parseInt(ui.kj_waterThreshold.getText()));
     storage.put("kj_waterPlanNum", parseInt(ui.kj_waterPlanNum.getText()));
     storage.put("kj_waterMinUnit", parseInt(ui.kj_waterMinUnit.getText()));
-    storage.put("kj_waterPointX", parseInt(ui.kj_waterPointX.getText()));
-    storage.put("kj_waterPointY", parseInt(ui.kj_waterPointY.getText()));
+    // storage.put("kj_waterPointX", parseInt(ui.kj_waterPointX.getText()));
+    // storage.put("kj_waterPointY", parseInt(ui.kj_waterPointY.getText()));
     storage.put("kj_friendXmax", parseInt(ui.kj_friendXmax.getText()));
     storage.put("kj_friendYmax", parseInt(ui.kj_friendYmax.getText()));
     // storage.put("a", 123);
@@ -300,38 +317,48 @@ function setData(){
     // console.log(getStorage("kj_friendXmax"));
     // console.log(getStorage("kj_friendXmax").mText());
 }
-function initData(){
+
+function initData() {
     var storage = storages.create("zxiaofan:ant");
     console.log(storage.get("kj_waterThreshold"));
-    
-    if(storage.contains("kj_waterThreshold")){
-        ui.kj_waterThreshold.setText(storage.get("kj_waterThreshold")+"");
+
+    if (storage.contains("kj_waterThreshold")) {
+        ui.kj_waterThreshold.setText(storage.get("kj_waterThreshold") + "");
     }
-    if( storage.contains("kj_waterPlanNum")){
-        ui.kj_waterPlanNum.setText(storage.get("kj_waterPlanNum")+"");
+    if (storage.contains("kj_waterPlanNum")) {
+        ui.kj_waterPlanNum.setText(storage.get("kj_waterPlanNum") + "");
     }
-    if( storage.contains("kj_waterMinUnit")){
-        ui.kj_waterMinUnit.setText(storage.get("kj_waterMinUnit")+"");
+    if (storage.contains("kj_waterMinUnit")) {
+        ui.kj_waterMinUnit.setText(storage.get("kj_waterMinUnit") + "");
     }
-    if( storage.contains("kj_waterPointX")){
-        ui.kj_waterPointX.setText(storage.get("kj_waterPointX")+"");
+    // if (storage.contains("kj_waterPointX")) {
+    //     ui.kj_waterPointX.setText(storage.get("kj_waterPointX") + "");
+    // }
+    // if (storage.contains("kj_waterPointY")) {
+    //     ui.kj_waterPointY.setText(storage.get("kj_waterPointY") + "");
+    // }
+    if (storage.contains("kj_friendXmax")) {
+        ui.kj_friendXmax.setText(storage.get("kj_friendXmax") + "");
     }
-    if(  storage.contains("kj_waterPointY")){
-        ui.kj_waterPointY.setText(storage.get("kj_waterPointY")+"");
+    if (storage.contains("kj_friendYmax")) {
+        ui.kj_friendYmax.setText(storage.get("kj_friendYmax") + "");
     }
-    if( storage.contains("kj_friendXmax")){
-        ui.kj_friendXmax.setText(storage.get("kj_friendXmax")+"");
-    }
-    if( storage.contains("kj_friendYmax")){
-        ui.kj_friendYmax.setText(storage.get("kj_friendYmax")+"");
-    }
+    module_util.getUid();
 }
 
-function getStorage(key) {
+function resetUIData() {
     var storage = storages.create("zxiaofan:ant");
-    console.log("storages:"+storage.get(key) );
-    
-    return storage.get(key) ;
+
+    ui.kj_waterThreshold.setText("30");
+    ui.kj_waterPlanNum.setText("10");
+
+    ui.kj_waterMinUnit.setText("10");
+
+    ui.kj_friendXmax.setText("900");
+
+    ui.kj_friendYmax.setText("810");
+
 }
+
 
 // context.exports = main;
