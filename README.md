@@ -22,6 +22,9 @@ Github更新可能略慢于微信公众号，此外由于总所周知的原因�
 - 支持 “微信搜索指定公众号并关注”；
 
 ## 1.3. 更新记录
+- 20200808，[点击下载](https://github.com/zxiaofan/AutoJsProject/releases/tag/v5.2.0)；
+   - 逻辑优化，避免重复进入同一个好友蚂蚁森林主页；
+   - 支持新版浇水，66g>33g>18g>10g；
 - 20200726开源第一版，[点击下载](https://github.com/zxiaofan/AutoJsProject/releases/tag/v5.1.0)；
    - 支持 “收取蚂蚁森林能量”；
    - 支持 “收取蚂蚁森林能量自动浇水”；

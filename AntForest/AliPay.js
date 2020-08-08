@@ -26,6 +26,7 @@ AliPay.fun_ant_main = function fun_ant_main(waterThreshold, waterPlanNum, waterM
     util.registEvent();
     while (!在蚂蚁森林任务页面()) {
         toastLog("还没进入蚂蚁森林任务页面呢...");
+
         sleep(2000);
     }
     toast("进入蚂蚁森林任务页面");
@@ -71,24 +72,25 @@ AliPay.fun_ant_main = function fun_ant_main(waterThreshold, waterPlanNum, waterM
     }
     toastLog("截图成功");
     sleep(500);
-    var shou = images.load("/sdcard/antshou.jpg");
-    var love = images.load("/sdcard/antlove.jpg");
-    var yaoqing = images.load("/sdcard/yaoqing.jpg");
+    var shou = images.load("/sdcard/antforest/antshou.jpg");
+    var love = images.load("/sdcard/antforest/antlove.jpg");
+    var yaoqing = images.load("/sdcard/antforest/yaoqing.jpg");
     if (null == shou) {
         shou = images.load("http://tc.zxiaofan.com/tc/a/icon/anthand.jpg");
+        images.save(shou, "/sdcard/antforest/anthand.jpg");
     }
     sleep(1000);
     if (null == love) {
         love = images.load("http://tc.zxiaofan.com/tc/a/icon/antlove.jpg");
+        images.save(love, "/sdcard/antforest/antlove.jpg");
     }
     sleep(1000);
     if (null == yaoqing) {
         yaoqing = images.load("http://tc.zxiaofan.com/tc/a/icon/yaoqing.jpg");
+        images.save(yaoqing, "/sdcard/antforest/yaoqing.jpg");
     }
     sleep(1000);
-    images.save(shou, "/sdcard/antshou.jpg");
-    images.save(love, "/sdcard/antlove.jpg");
-    images.save(yaoqing, "/sdcard/yaoqing.jpg");
+
     if (shou == null || love == null || yaoqing == null) {
         toastLog("加载图片失败");
         return;
@@ -98,12 +100,13 @@ AliPay.fun_ant_main = function fun_ant_main(waterThreshold, waterPlanNum, waterM
     var count = 0;
     toastLog("[屏幕分辨率]width:" + width + ";height:" + height);
     var jiaoshuiAll = 0;
+    var lastPoint;
     while (count < countmax) {
         count++;
         screen = captureScreen();
         var point = findImage(screen, shou, {
             region: [width - 200, 200, 200, height - 200],
-            threshold: 0.5
+            threshold: 0.6
         });
         sleep(500);
         if (!point) {
@@ -112,8 +115,13 @@ AliPay.fun_ant_main = function fun_ant_main(waterThreshold, waterPlanNum, waterM
                 threshold: 0.5
             });
         }
+        if (point && lastPoint && point.y == lastPoint.y) {
+            toastLog("重复定位，上滑:" + point);
+            util.swipeAuto(0.8, 0.7, 0.85, 0.6, 13);
+        }
         if (point) {
             toastLog("找到可收取能量:" + point);
+            lastPoint = point;
             var xpoint = random() * 50 + 17;
             click(point.x - 20, point.y + 30);
 
@@ -201,6 +209,7 @@ function getEnergyByKJ(k, waterThreshold, waterPlanNum, waterMinUnit) {
     var friendSL = textContains("的蚂蚁森林").className("android.widget.TextView").findOnce();
     if (null != friendSL) {
         friendName = friendSL.getText();
+        toastLog("进入好友的蚂蚁森林主页[" + friendName + "]");
         if (null != friendName) {
             friendName = friendName.replace("的蚂蚁森林", "");
         }
@@ -210,7 +219,7 @@ function getEnergyByKJ(k, waterThreshold, waterPlanNum, waterMinUnit) {
         sleep(1000);
         var 你收取TA2 = getTaTotal();
         getTa = 你收取TA2 - 你收取TA1;
-        toastLog("本次收取[" + friendName + "]能量：" + getTa + "g");
+        toastLog("本次收取[" + friendName + "]能量：(" + 你收取TA2 + "-" + 你收取TA1 + ")=" + getTa + "g");
     }
     // var jiaoshuiTime = 0;
     // while (2 == k && jiaoshuiTime < 3 && getTa >= waterThreshold) {
@@ -240,7 +249,7 @@ function clickNengLiangQiu(keshouqu, time) {
     }
 
     var getTa1 = getFromTaNum();
-    if(getTa1 == -1){
+    if (getTa1 == -1) {
         getTa1 = getMyEnergy();
     }
     var hasClick = false;
@@ -271,7 +280,7 @@ function clickNengLiangQiu(keshouqu, time) {
     }
     if (hasClick) {
         var getTa2 = getFromTaNum();
-        if(getTa2 == -1){
+        if (getTa2 == -1) {
             getTa2 = getMyEnergy();
         }
         if (getTa2 > 0 && getTa1 != getTa2) {
@@ -452,7 +461,7 @@ function getEnergy(k) {
     for (var row = 640; row < rowmax; row += 100) {
         for (var col = 140; col < colmax; col += 100) {
             // console.log("col:"+col+",row:"+row);
-            
+
             click(col, row);
             sleep(30);
         }
@@ -478,7 +487,7 @@ function getEnergy(k) {
 
 // waterThreshold 浇水阀值，getNum 收取能量数量，waterPlanNum达到阀值后浇水数量, waterMinUnit浇水最小单位
 function waterFun(getNum) {
-    if(getNum <= 0){
+    if (getNum <= 0) {
         return 0;
     }
     var waterMaxCount = parseInt(getNum / util.getStorage("kj_waterThreshold"));
@@ -496,52 +505,52 @@ function waterFun(getNum) {
     // sleep(300); // 今日浇水量已达上限
     var waterActualNum = 0;
     // if (null != selectWater) {
-        waterActualNum = calAndWater(waterNum, util.getStorage("kj_waterMinUnit"));
-        // calAndWater(30, 10);
+    waterActualNum = calAndWater(waterNum, util.getStorage("kj_waterMinUnit"));
+    // calAndWater(30, 10);
     // }
-   /**  else {
-        waterActualNum = waterActualNum + 10;
-        // 老版本浇水，已经浇水成功1次了，总共最多浇水3次
-        waterMaxCount--;
-        if (waterMaxCount > 0) {
-            // 浇水 = className("android.widget.Button").text("浇水").findOnce();
-            // click(浇水.bounds().centerX(), 浇水.bounds().centerY());
-            click(util.getStorage("kj_waterPointX"), util.getStorage("kj_waterPointY"));
-            waterActualNum = waterActualNum + 10;
-            sleep(500);
-            waterMaxCount--;
-        }
-        if (waterMaxCount > 0) {
-            // 浇水 = className("android.widget.Button").text("浇水").findOnce();
-            // click(浇水.bounds().centerX(), 浇水.bounds().centerY());
-            click(util.getStorage("kj_waterPointX"), util.getStorage("kj_waterPointY"));
-            waterActualNum = waterActualNum + 10;
-            sleep(500);
-            waterMaxCount--;
-        }
-    }
-    **/
+    /**  else {
+         waterActualNum = waterActualNum + 10;
+         // 老版本浇水，已经浇水成功1次了，总共最多浇水3次
+         waterMaxCount--;
+         if (waterMaxCount > 0) {
+             // 浇水 = className("android.widget.Button").text("浇水").findOnce();
+             // click(浇水.bounds().centerX(), 浇水.bounds().centerY());
+             click(util.getStorage("kj_waterPointX"), util.getStorage("kj_waterPointY"));
+             waterActualNum = waterActualNum + 10;
+             sleep(500);
+             waterMaxCount--;
+         }
+         if (waterMaxCount > 0) {
+             // 浇水 = className("android.widget.Button").text("浇水").findOnce();
+             // click(浇水.bounds().centerX(), 浇水.bounds().centerY());
+             click(util.getStorage("kj_waterPointX"), util.getStorage("kj_waterPointY"));
+             waterActualNum = waterActualNum + 10;
+             sleep(500);
+             waterMaxCount--;
+         }
+     }
+     **/
     sleep(800);
     return waterActualNum;
 }
 
-// 计算浇水数量并浇水：waterThreshold浇水阀值，每收取多少g浇水10g；getNum实际收取能量g数
+// 计算浇水数量并浇水： waterThreshold 浇水阀值，每收取多少g浇水10g； getNum 实际收取能量g数
 function calAndWater(waterNum, waterMinUnit) {
     var info = "计划浇水" + waterNum + "g，";
     var waterArr = [];
     while (waterArr.length < 3 && waterNum >= 1) {
-        if (waterNum >= 18 && 18 >= waterMinUnit) {
+        if (waterNum >= 66 && 66 >= waterMinUnit) {
+            waterNum = waterNum - 66;
+            waterArr.push(66);
+        } else if (waterNum >= 33 && 33 >= waterMinUnit) {
+            waterNum = waterNum - 33;
+            waterArr.push(33);
+        } else if (waterNum >= 18 && 18 >= waterMinUnit) {
             waterNum = waterNum - 18;
             waterArr.push(18);
         } else if (waterNum >= 10 && 10 >= waterMinUnit) {
             waterNum = waterNum - 10;
             waterArr.push(10);
-        } else if (waterNum >= 5 && 5 >= waterMinUnit) {
-            waterNum = waterNum - 5;
-            waterArr.push(5);
-        } else if (waterNum >= 1 && 1 >= waterMinUnit) {
-            waterNum = waterNum - 1;
-            waterArr.push(1);
         } else {
             break;
         }
@@ -567,9 +576,11 @@ function calAndWater(waterNum, waterMinUnit) {
         //     var 浇水 = className("android.widget.Button").text("浇水").findOnce();
         //     click(浇水.bounds().centerX(), 浇水.bounds().centerY());
         // }
-        click(util.getStorage("kj_waterPointX"), util.getStorage("kj_waterPointY"));
+        // click(util.getStorage("kj_waterPointX"), util.getStorage("kj_waterPointY"));
+        var 浇水 = className("android.widget.Button").text("浇水").findOnce();
+        click(浇水.bounds().centerX(), 浇水.bounds().centerY());
         sleep(300);
-        var selectWater = text("请选择为TA浇水的克数").className("android.view.View").findOnce();
+        var selectWater = text("请选择为TA浇水的克数").findOnce();
         if (null == selectWater) {
             toastLog("今日浇水已达上限");
             break;
@@ -587,9 +598,9 @@ function waterNew(param) {
     var 浇水克数 = text(param + "克").className("android.widget.Button").clickable().findOnce();
     sleep(200);
     if (浇水克数 == null) {
-        // var 浇水 = className("android.widget.Button").text("浇水").findOnce();
-        // click(浇水.bounds().centerX(), 浇水.bounds().centerY());
-        click(util.getStorage("kj_waterPointX"), util.getStorage("kj_waterPointY"));
+        var 浇水 = className("android.widget.Button").text("浇水").findOnce();
+        click(浇水.bounds().centerX(), 浇水.bounds().centerY());
+        // click(util.getStorage("kj_waterPointX"), util.getStorage("kj_waterPointY"));
     } else {
         浇水克数.click();
     }
