@@ -20,10 +20,13 @@ main_fun.findMe = function findMe(dyh) {
 // 检查更新
 // checkUpdate 没有括号
 main_fun.checkUpdate = function checkUpdate(version) {
-    var thread = threads.start(function () {
-        checkUpdateFun(version);
-    });
-    return thread;
+    // var thread = threads.start(function () {
+    //     checkUpdateFun(version);
+    // });
+    // toastLog(thread);
+    // return thread;
+    var checkRes = checkUpdateFun(version);
+    return checkRes;
 };
 
 // 收取蚂蚁森林能量
@@ -125,7 +128,9 @@ function checkUpdateFun(version) {
     for (let i = 0; i < timeOutTimes; i++) {
         if (response == null) {
             sleep(200);
-            toastLog("查询最新版本ing：" + i);
+            if (i > 2) {
+                toastLog("查询最新版本ing：" + i);
+            }
         } else {
             break;
         }
@@ -139,14 +144,15 @@ function checkUpdateFun(version) {
     }
 
     sleep(2000);
+    var info = "";
     if (version.length >= 12 && versionEsc.length >= 12 && version.substring(0, 12) == versionEsc.substring(0, 12)) {
         toastLog("当前已是最新版");
     } else {
         toastLog("【当前版本】" + version + ";【服务器版本】" + versionEsc);
-        var info = "APP已更新，请前往订阅号zxiaofan回复关键字【蚂蚁森林】获取最新版APP：" + versionEsc;
+        info = "APP已更新，请前往订阅号zxiaofan回复关键字【蚂蚁森林】获取最新版APP：" + versionEsc;
         dialogs.confirm(info);
     }
-    return null;
+    return info;
 };
 
 

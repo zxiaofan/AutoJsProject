@@ -60,6 +60,7 @@ ui.layout(
             <button marginTop="30px" marginLeft="100px" id="kj_closeConsole" text="关闭日志窗口" />
             <button marginTop="30px" marginLeft="150px" id="kj_clearLog" text="清理日志" />
         </horizontal>
+        <button marginTop="30px" id="kj_gotoGitHub" text="项目已开源，点击前往GitHub查看" />
     </vertical>
 );
 toastLog(ui.kj_aboutThis.getText());
@@ -70,7 +71,7 @@ var module_util = require("./util.js");
 
 initData();
 
-module_main_fun.checkUpdate(version);
+this.fun_checkUpdate(version);
 
 ui.kj_findMe.click(() => {
 
@@ -175,7 +176,7 @@ ui.kj_about.click(() => {
 
 ui.kj_checkUpdate.click(() => {
     // log("main_ant_miaobi:" + module_main_ant_miaobi);
-    module_main_fun.checkUpdate(version);
+    this.fun_checkUpdate(version);
     // exit();
 });
 
@@ -273,6 +274,11 @@ ui.kj_close.click(() => {
 });
 
 
+ui.kj_gotoGitHub.click(() => {
+    app.openUrl("https://github.com/zxiaofan/AutoJsProject");
+});
+
+
 // main.getWaterThreshold = function getWaterThreshold() {
 //     return ui.kj_waterThreshold.getText();
 // };
@@ -300,6 +306,18 @@ ui.kj_close.click(() => {
 // main.getkj_friendYmax = function getkj_friendYmax() {
 //     return ui.kj_friendYmax.getText();
 // };
+
+function fun_checkUpdate(version) {
+    var thread = threads.start(function () {
+        var updateResult = module_main_fun.checkUpdate(version);
+        // toastLog("fun_checkUpdate:" + updateResult);
+        if (updateResult != "") {
+            ui.kj_checkUpdate.setText("【检查更新】APP已更新，赶紧使用最新版吧");
+        } else {
+            ui.kj_checkUpdate.setText("【检查更新】");
+        }
+    });
+}
 
 function setStorageData() {
     var storage = storages.create("zxiaofan:ant");

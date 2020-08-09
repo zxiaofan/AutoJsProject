@@ -416,7 +416,7 @@ function getTaOld() {
 }
 
 function getEnergy(k) {
-    sleep(3000);
+    sleep(3500);
     while (2 == k && !text("你收取TA").exists()) {
         toastLog("还没进入好友的蚂蚁森林主页呢...");
         sleep(2000);
@@ -579,8 +579,8 @@ function calAndWater(waterNum, waterMinUnit) {
         // click(util.getStorage("kj_waterPointX"), util.getStorage("kj_waterPointY"));
         var 浇水 = className("android.widget.Button").text("浇水").findOnce();
         click(浇水.bounds().centerX(), 浇水.bounds().centerY());
-        sleep(300);
-        var selectWater = text("请选择为TA浇水的克数").findOnce();
+        sleep(700);
+        var selectWater = text("请选择为TA浇水的克数").findOne(3000);
         if (null == selectWater) {
             toastLog("今日浇水已达上限");
             break;
@@ -592,7 +592,7 @@ function calAndWater(waterNum, waterMinUnit) {
     return waterActualNum;
 }
 function waterNew(param) {
-    // param:1克，5克，10克，18克，浇水送祝福
+    // param:10克，18克，33克，66克，浇水送祝福
     sleep(300);
     toastLog("即将浇水" + param + "g");
     var 浇水克数 = text(param + "克").className("android.widget.Button").clickable().findOnce();
