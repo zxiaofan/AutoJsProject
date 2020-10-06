@@ -18,8 +18,7 @@ AliPay.fun_ant_main = function fun_ant_main(waterThreshold, waterPlanNum, waterM
     sleep(4000);
     // waitForPackage("com.eg.android.AlipayGphone");
     toastLog("进入支付宝首页，准备收取蚂蚁森林能量");
-    var counttmp = 0;
-
+    count = 0;
     goto_ant();
 
     //注册音量下按下退出脚本监听
@@ -37,138 +36,17 @@ AliPay.fun_ant_main = function fun_ant_main(waterThreshold, waterPlanNum, waterM
     // 先把自己的能量收了
     // 排除区域：250,420,830,1608
 
-
-    // var aaaa=1;
-    // if(aaaa){
-    //     toastLog("sssssss"+waterThreshold);
-    //     return;
-    // }
-
-    toastLog("请求截图权限");
-
-    var reqScreen = requestScreenCapture();
-    // log("reqScreen:" + reqScreen);
-    if (!reqScreen) {
-        sleep(1000);
-        toastLog("请求截图权限失败");
-        return;
-        // exit();
-    }
-
     toastLog("收取自己的蚂蚁森林能量");
     // getEnergy(1);
     getEnergyByKJ(1, 0, 0);
 
     sleep(1000);
-    toastLog("下滑");
-    sleep(1000);
 
-    scrollDown();
-    var screen = captureScreen();
-    if (screen == null) {
-        toastLog("截图失败，程序退出");
-        return;
-        // exit();
-    }
-    toastLog("截图成功");
-    sleep(500);
-    var shou = images.load("/sdcard/antforest/antshou.jpg");
-    var love = images.load("/sdcard/antforest/antlove.jpg");
-    var yaoqing = images.load("/sdcard/antforest/yaoqing.jpg");
-    if (null == shou) {
-        shou = images.load("http://tc.zxiaofan.com/tc/a/icon/anthand.jpg");
-        images.save(shou, "/sdcard/antforest/anthand.jpg");
-    }
-    sleep(1000);
-    if (null == love) {
-        love = images.load("http://tc.zxiaofan.com/tc/a/icon/antlove.jpg");
-        images.save(love, "/sdcard/antforest/antlove.jpg");
-    }
-    sleep(1000);
-    if (null == yaoqing) {
-        yaoqing = images.load("http://tc.zxiaofan.com/tc/a/icon/yaoqing.jpg");
-        images.save(yaoqing, "/sdcard/antforest/yaoqing.jpg");
-    }
-    sleep(1000);
-
-    if (shou == null || love == null || yaoqing == null) {
-        toastLog("加载图片失败");
-        return;
-        // exit();
-    }
-
-    var count = 0;
     toastLog("[屏幕分辨率]width:" + width + ";height:" + height);
     var jiaoshuiAll = 0;
-    var lastPoint;
-    while (count < countmax) {
-        count++;
-        screen = captureScreen();
-        var point = findImage(screen, shou, {
-            region: [width - 200, 200, 200, height - 200],
-            threshold: 0.6
-        });
-        sleep(500);
-        if (!point) {
-            point = findImage(screen, love, {
-                region: [width - 200, 200, 200, height - 200],
-                threshold: 0.5
-            });
-        }
-        if (point && lastPoint && point.y == lastPoint.y) {
-            toastLog("重复定位，上滑:" + point);
-            util.swipeAuto(0.8, 0.7, 0.85, 0.6, 13);
-        }
-        if (point) {
-            toastLog("找到可收取能量:" + point);
-            lastPoint = point;
-            var xpoint = random() * 50 + 17;
-            click(point.x - 20, point.y + 30);
+    toastLog("逛一逛收能量ing");
+    guangyiguangGetEnergy(jiaoshuiAll);
 
-            var jiaoshui = getEnergy(2);      //收能量
-            // 计算收能量数量
-
-            // var jiaoshui = getEnergyByKJ(2, waterThreshold, waterPlanNum, waterMinUnit);
-            jiaoshuiAll = jiaoshuiAll + jiaoshui;
-            sleep(500);
-            back();
-            sleep(1000);
-        } else {
-            toastLog("没有找到能量：" + count);
-            sleep(1000);
-            var 没有更多了 = text("没有更多了").findOnce();
-            if (没有更多了 != null) {
-                toastLog("所有好友的蚂蚁森林均已查看完毕");
-                sleep(1000);
-                count = countmax;
-                break;
-            }
-            var hasYaoQing = findImage(screen, yaoqing);
-            if (hasYaoQing != null) {
-                toastLog("所有好友的蚂蚁森林均已查看完毕");
-                sleep(1000);
-                count = countmax;
-                break;
-            }
-            //  else if (!textContains("排行榜").exists()) {
-            //     toastLog("error_当前不在好友列表页面");
-            //     back();
-            // } 
-            // else {
-            // scrollDown();
-            // util.swipeDown();
-            util.swipeAuto(0.8, 0.75, 0.85, 0.2, 13);
-
-            toastLog("查看更多好友");
-            if (textContains("查看更多好友").exists()) {
-                click("查看更多好友");
-            } else {
-                // util.swipeDown();
-            }
-            sleep(1000);
-            // }
-        }
-    }
     toastLog("脚本运行结束");
     toastLog("Build By @zxiaofan，有问题请前往订阅号【zxiaofan】留言");
     back();
@@ -182,6 +60,42 @@ AliPay.fun_ant_main = function fun_ant_main(waterThreshold, waterPlanNum, waterM
     // dialogs.confirm(info1);
     toastLog(info1);
     // exit();
+}
+
+// 逛一逛收能量
+function guangyiguangGetEnergy(jiaoshuiAll) {
+    sleep(500);
+    var 浇水 = className("android.widget.Button").text("浇水").findOnce();
+    if (null != 浇水) {
+        // 浇水 右移 即是 逛一逛
+        click(浇水.bounds().centerX() + 128, 浇水.bounds().centerY());
+    } else {
+        var 背包 = className("android.widget.Button").text("背包").findOnce();
+        click(背包.bounds().centerX() + 128, 背包.bounds().centerY());
+    }
+    sleep(1500);
+    if (!在好友的蚂蚁森林页面()) {
+        sleep(1500);
+    }
+    if (!在好友的蚂蚁森林页面()) {
+        sleep(1500);
+    }
+    if (在好友的蚂蚁森林页面()) {
+        toastLog("找到可收取能量");
+
+        if (++count > countmax) {
+            toastLog("处理次数超过" + countmax + "次，暂停执行");
+            return false;
+        }
+        var jiaoshui = getEnergy(2);      //收能量
+
+        jiaoshuiAll = jiaoshuiAll + jiaoshui;
+        
+        guangyiguangGetEnergy(jiaoshuiAll);
+    } else {
+        toastLog("逛一逛暂未发现可收取能量");
+        return false;
+    }
 }
 
 // 基于控件获取坐标收取能量
@@ -718,4 +632,11 @@ function 在蚂蚁森林任务页面() {
     }
 }
 
+function 在好友的蚂蚁森林页面() {
+    if (textContains("的蚂蚁森林").exists() && text("浇水").exists()) {
+        return true;
+    } else {
+        return false;
+    }
+}
 module.exports = AliPay;

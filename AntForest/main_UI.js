@@ -1,8 +1,8 @@
 "ui";
 var height = device.height;
 var width = device.width;
-var version = "202008082230";
-var versionDesc = "逻辑优化，支持新版浇水";
+var version = "202010062200";
+var versionDesc = "逻辑优化，支持逛一逛收能量";
 
 var main = {};
 ui.layout(
@@ -145,7 +145,7 @@ ui.kj_about.click(() => {
         "1、APP需要打开以下权限：无障碍服务权限、后台弹出界面；\n\n" +
         "    权限必须提前打开，否则可能执行失败；\n\n" +
         "    权限必须提前打开！！！\n\n" +
-        "2、更新说明：20200808支持新版浇水；\n\n" +
+        "2、更新说明：20201006支持逛一逛收能量；\n\n" +
         "3、【支付宝会员领积分】:\n" +
         // "    2.1、浏览店铺领喵币；\n" +
         // "    2.2、天降喵币；\n" +
