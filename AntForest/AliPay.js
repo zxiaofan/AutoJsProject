@@ -37,7 +37,7 @@ AliPay.fun_ant_main = function fun_ant_main(waterThreshold, waterPlanNum, waterM
     // 排除区域：250,420,830,1608
 
     toastLog("收取自己的蚂蚁森林能量");
-    // getEnergy(1);
+
     getEnergyByKJ(1, 0, 0);
 
     sleep(1000);
@@ -69,7 +69,11 @@ function guangyiguangGetEnergy(jiaoshuiAll) {
     if (null != 浇水) {
         // 浇水 右移 即是 逛一逛
         click(浇水.bounds().centerX() + 128, 浇水.bounds().centerY());
+        // 连点2次，可以关闭 树上的装扮，由于是连点没有装扮也无其他影响；
+        sleep(100);
+        click(浇水.bounds().centerX() + 128, 浇水.bounds().centerY());
     } else {
+        // 浇水 右移 即是 逛一逛
         var 背包 = className("android.widget.Button").text("背包").findOnce();
         click(背包.bounds().centerX() + 128, 背包.bounds().centerY());
     }
@@ -90,7 +94,7 @@ function guangyiguangGetEnergy(jiaoshuiAll) {
         var jiaoshui = getEnergy(2);      //收能量
 
         jiaoshuiAll = jiaoshuiAll + jiaoshui;
-        
+
         guangyiguangGetEnergy(jiaoshuiAll);
     } else {
         toastLog("逛一逛暂未发现可收取能量");
@@ -330,7 +334,9 @@ function getTaOld() {
 }
 
 function getEnergy(k) {
-    sleep(3500);
+    if (!在好友的蚂蚁森林页面()) {
+        sleep(1500);
+    }
     while (2 == k && !text("你收取TA").exists()) {
         toastLog("还没进入好友的蚂蚁森林主页呢...");
         sleep(2000);
