@@ -47,7 +47,7 @@ AliPay.fun_ant_main = function fun_ant_main(waterThreshold, waterPlanNum, waterM
     toastLog("逛一逛收能量ing");
     guangyiguangGetEnergy(jiaoshuiAll);
 
-    toastLog("脚本运行结束");
+    toastLog("收能量结束");
     toastLog("Build By @zxiaofan，有问题请前往订阅号【zxiaofan】留言");
     back();
     scrollUp();
@@ -78,12 +78,17 @@ function guangyiguangGetEnergy(jiaoshuiAll) {
         click(背包.bounds().centerX() + 128, 背包.bounds().centerY());
     }
     sleep(1500);
-    if (!在好友的蚂蚁森林页面()) {
-        sleep(1500);
+
+    // 返回我的森林
+    if (className("android.view.View").text("startapp?appId=60000002&url=%2Fwww%2Fhome").exists()) {
+        sleep(500);
+        toastLog("森林里除了鸟叫，什么也没有发现");
+        sleep(500);
+        toastLog("逛一逛暂未发现可收取能量");
+        return false;
     }
-    if (!在好友的蚂蚁森林页面()) {
-        sleep(1500);
-    }
+    等待进入好友的蚂蚁森林页面(8000);
+
     if (在好友的蚂蚁森林页面()) {
         toastLog("找到可收取能量");
 
@@ -139,17 +144,7 @@ function getEnergyByKJ(k, waterThreshold, waterPlanNum, waterMinUnit) {
         getTa = 你收取TA2 - 你收取TA1;
         toastLog("本次收取[" + friendName + "]能量：(" + 你收取TA2 + "-" + 你收取TA1 + ")=" + getTa + "g");
     }
-    // var jiaoshuiTime = 0;
-    // while (2 == k && jiaoshuiTime < 3 && getTa >= waterThreshold) {
-    //     jiaoshuiTime++;
-    //     toastLog("为[" + friendName + "]浇水第" + jiaoshuiTime + "次");
-    //     var 浇水 = className("android.widget.Button").text("浇水").findOnce();
-    //     // log(浇水.bounds());
-    //     click(浇水.bounds().centerX(), 浇水.bounds().centerY());
-    //     jiaoshuiNum = jiaoshuiNum + 10;
-    //     sleep(3000);
-    //     getTa = getTa - waterThreshold;
-    // }
+
     var waterActualNum = 0;
     if (k == 2) {
         waterActualNum = waterFun(waterThreshold, getTa, waterPlanNum, waterMinUnit);
@@ -221,13 +216,6 @@ function getMyEnergy() {
     }
     return 0;
 }
-
-// var 你收取TA = getFromTaNum();
-// log("你收取TA：" + 你收取TA);
-
-// var TA收取你 = Number(getFromMeNum());
-// log("TA收取你:" + TA收取你);
-
 
 function getFromTaNum() {
     sleep(500);
@@ -334,9 +322,7 @@ function getTaOld() {
 }
 
 function getEnergy(k) {
-    if (!在好友的蚂蚁森林页面()) {
-        sleep(1500);
-    }
+    等待进入好友的蚂蚁森林页面(3000);
     while (2 == k && !text("你收取TA").exists()) {
         toastLog("还没进入好友的蚂蚁森林主页呢...");
         sleep(2000);
@@ -645,4 +631,11 @@ function 在好友的蚂蚁森林页面() {
         return false;
     }
 }
+
+
+function 等待进入好友的蚂蚁森林页面(timeout) {
+    textContains("的蚂蚁森林").findOne(timeout);
+    text("浇水").findOne(timeout);
+}
+
 module.exports = AliPay;
