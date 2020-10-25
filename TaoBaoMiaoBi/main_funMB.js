@@ -32,21 +32,21 @@ main_funMB.checkUpdate = function checkUpdate(version) {
 
 main_funMB.main_method = function main_method(method, boolThread) {
     if ("天猫喵币" == method) {
-        toastLog("[fun]"+method);
+        toastLog("[fun]" + method);
         if (boolThread) {
             var dis_result1 = threads.disposable();
             var thread = threads.start(function () {
                 AliMB.fun_TMMB();
                 dis_result1.setAndNotify(1);
             });
-            
+
             dis_result1.blockedGet()
             return dis_result1;
         } else {
             AliMB.fun_TMMB();
         }
-    } else if("支付宝喵币" == method) {
-        toastLog("[fun]"+method);
+    } else if ("支付宝喵币" == method) {
+        toastLog("[fun]" + method);
 
         if (boolThread) {
             var dis_result2 = threads.disposable();
@@ -59,6 +59,20 @@ main_funMB.main_method = function main_method(method, boolThread) {
         } else {
             AliMB.fun_ZFBMB();
         }
+    } else if ("淘宝猫币" == method) {
+        toastLog("[fun]" + method);
+
+        if (boolThread) {
+            var dis_result3 = threads.disposable();
+            var thread = threads.start(function () {
+                AliMB.fun_TBMB();
+                dis_result3.setAndNotify(1);
+            });
+            dis_result3.blockedGet()
+            return dis_result3;
+        } else {
+            AliMB.fun_TBMB();
+        }
     }
 }
 
@@ -69,7 +83,7 @@ function checkUpdateFun(version) {
     threads.start(function () {
         var reqUrl = versionUrl;
         if (reqUrl.indexOf("zxiaofan") > -1) {
-            reqUrl += "?version=" + version + "?uid=" + util.getStorage("uid");
+            reqUrl += "?version=" + version + "?uid=" + util.getUid("miaobi");
         }
         var r = http.get(reqUrl, {}, function (res, err) {
             if (err) {
@@ -95,7 +109,7 @@ function checkUpdateFun(version) {
     if (response.statusCode >= 200 && response.statusCode <= 304) {
         versionEsc = response.body.string();
     } else {
-        toastLog("检查更新失败，请前往订阅号zxiaofan回复关键字【蚂蚁森林】获取最新版APP");
+        toastLog("检查更新失败，请前往订阅号zxiaofan回复关键字【喵币】获取最新版APP");
     }
 
     sleep(2000);
@@ -104,7 +118,7 @@ function checkUpdateFun(version) {
         toastLog("当前已是最新版");
     } else {
         toastLog("【当前版本】" + version + ";【服务器版本】" + versionEsc);
-        info = "APP已更新，请前往订阅号zxiaofan回复关键字【蚂蚁森林】获取最新版APP：" + versionEsc;
+        info = "APP已更新，请前往订阅号zxiaofan回复关键字【喵币】获取最新版APP：" + versionEsc;
         dialogs.confirm(info);
     }
     return info;

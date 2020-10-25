@@ -102,6 +102,54 @@ AliMB.fun_ZFBMB = function fun_ZFBMB() {
     toastLog(info1);
 }
 
+
+
+// 收取淘宝喵币
+AliMB.fun_TBMB = function fun_TBMB() {
+    toastLog("Build By @zxiaofan，有问题请前往订阅号【zxiaofan】留言");
+    toastLog("请为此APP打开以下权限：无障碍服务权限、后台弹出界面");
+    auto.waitFor();
+    toastLog("打开淘宝");
+    setScreenMetrics(width, height);
+    launch("com.taobao.taobao");
+    sleep(4000);
+    // waitForPackage("com.eg.android.AlipayGphone");
+    toastLog("进入淘宝首页，准备领喵币");
+    scrollUp();
+    scrollUp();
+
+
+    //注册音量下按下退出脚本监听
+    util.registEvent();
+
+    while (!在淘宝底部界面() && !在淘宝喵币任务页面()) {
+        toastLog("还没进入淘宝首页呢...");
+        sleep(2000);
+        back();
+    }
+    goto_tbmb();
+    while (!在淘宝喵币任务页面()) {
+        toastLog("还没进入淘宝喵币任务页面呢...");
+        sleep(2000);
+    }
+    sleep(1000);
+    toast("进入淘宝喵币任务页面");
+    scrollUp();
+    scrollUp();
+
+    sleep(1000);
+
+    getTBMbByLiuLanDP();
+
+    toastLog("Build By @zxiaofan，有问题请前往订阅号【zxiaofan】留言");
+
+    scrollUp();
+    sleep(1000);
+    var info1 = "淘宝领喵币完成";
+    toastLog(info1);
+}
+
+
 // 进入天猫喵币主页
 function goto_tmmb() {
     scrollUp();
@@ -123,6 +171,19 @@ function goto_zfbmb() {
     sleep(1000);
     var x_cjxxm = 500;
     var y_cjxxm = 600;
+    toastLog("[坐标]超级星秀猫：" + x_cjxxm + "," + y_cjxxm);
+    click(x_cjxxm, y_cjxxm);
+    sleep(1000);
+}
+
+// 进入淘宝喵币主页
+function goto_tbmb() {
+    scrollUp();
+    scrollUp();
+    toastLog("【Start】准备淘宝“天猫双十一，超级星秀猫”");
+    sleep(1000);
+    var x_cjxxm = 800;
+    var y_cjxxm = 800;
     toastLog("[坐标]超级星秀猫：" + x_cjxxm + "," + y_cjxxm);
     click(x_cjxxm, y_cjxxm);
     sleep(1000);
@@ -181,6 +242,38 @@ function getTMMbByLiuLanDP() {
     toastLog("【End】浏览店铺领喵币");
 
 }
+
+// 淘宝浏览店铺领喵币
+function getTBMbByLiuLanDP() {
+    toastLog("【Start】浏览店铺领喵币");
+
+    var 位置_下滑店铺得更多喵币 = textContains("下滑店铺得更多喵币").findOnce();
+    if (位置_下滑店铺得更多喵币 == null) {
+        toastLog("自动进入【领喵币中心】失败，请手动进入");
+    } else {
+        toastLog(位置_下滑店铺得更多喵币.bounds());
+        toastLog("[计算坐标]下滑店铺得更多喵币");
+        sleep(200);
+        x_llb = width - 100;
+        y_llb = 位置_下滑店铺得更多喵币.bounds().centerY() - 100;
+        toastLog("[坐标]领喵币：" + x_llb + "," + y_llb);
+        click(x_llb, y_llb);
+        sleep(500);
+    }
+    // 进入【领喵币中心】
+    while (!在淘宝领喵币中心页面()) {
+        toastLog("还没进入淘宝【领喵币中心】呢...");
+        sleep(2000);
+    }
+    click("开心收下，喵");
+    getTMMbQuLiuLan("去浏览", "淘宝");
+    getTMMbQuLiuLan("去观看", "淘宝");
+    getTMMbQuLiuLan("去搜索", "淘宝");
+    getTMMbQuLiuLan("去完成", "淘宝");
+    toastLog("【End】浏览店铺领喵币");
+
+}
+
 // 支付宝浏览店铺领喵币
 function getZFBMbByLiuLanDP() {
     toastLog("【Start】支付宝浏览店铺领喵币");
@@ -251,6 +344,7 @@ function getTMMbQuLiuLan(sign, source) {
     }
     while (count < countMax) {
         click("好的，我知道了");
+        click("开心收下，喵");
         sleep(1000);
         var 去浏览 = textContains(sign).findOnce();
         if ("去完成" == sign) {
@@ -260,7 +354,21 @@ function getTMMbQuLiuLan(sign, source) {
         // log("[去浏览]：" + 去浏览);
         if (去浏览 == null) {
             if ("支付宝" == source && !在支付宝领喵币中心页面()) {
-                toastLog("继续向上返回");
+                toastLog("支付宝-继续向上返回");
+                back();
+                sleep(2000);
+                click("好的，我知道了");
+                去浏览 = textContains(sign).findOnce();
+            }
+            if ("淘宝" == source && !在淘宝领喵币中心页面()) {
+                toastLog("淘宝-继续向上返回");
+                back();
+                sleep(2000);
+                click("好的，我知道了");
+                去浏览 = textContains(sign).findOnce();
+            }
+            if ("天猫" == source && !在天猫领喵币中心页面()) {
+                toastLog("天猫-继续向上返回");
                 back();
                 sleep(2000);
                 click("好的，我知道了");
@@ -293,6 +401,11 @@ function getTMMbQuLiuLan(sign, source) {
 
         sleep(2000);
 
+        var isTbTj = isTbTeJia();
+        if (isTbTj) {
+            back();
+            continue;
+        }
 
         util.swipeUp();
         sleep(1000);
@@ -301,6 +414,8 @@ function getTMMbQuLiuLan(sign, source) {
         if (isCom) {
             break;
         }
+
+
         util.swipeUp();
         toastLog("[等待滑动15秒领取喵币/能量1 ing...]");
         sleep(3000);
@@ -310,16 +425,14 @@ function getTMMbQuLiuLan(sign, source) {
             break;
         }
         sleep(5000);
-        util.swipeDown();
-        toastLog("[等待滑动15秒领取喵币/能量2 ing...]");
-        util.swipeDown();
+        if (!在直播界面()) {
+            util.swipeDown();
+            toastLog("[等待滑动15秒领取喵币/能量2 ing...]");
+            util.swipeDown();
+        }
         // desc 任务完成
         sleep(9000);
-        if (text("首页").exists()) {
-            toastLog("从首页再次进入领喵币/能量主页");
-            click("首页");
-            goScan();
-        } else if (text("全部").exists() && desc("搜索").exists()) {
+        if (text("全部").exists() && desc("搜索").exists()) {
             toastLog("上滑再次进入领喵币/能量主页");
             scrollUp();
             sleep(200);
@@ -339,6 +452,10 @@ function getTMMbQuLiuLan(sign, source) {
             }
             if ("支付宝" == source && !在支付宝领喵币中心页面()) {
                 toastLog("目前没有在支付宝领喵币/能量中心了呢，逛店铺领喵币/能量结束");
+                sleep(1000);
+            }
+            if ("淘宝" == source && !在淘宝领喵币中心页面()) {
+                toastLog("目前没有在淘宝领喵币/能量中心了呢，逛店铺领喵币/能量结束");
                 sleep(1000);
             }
         }
@@ -461,6 +578,14 @@ function 在支付宝领喵币中心页面() {
     }
 }
 
+function 在淘宝领喵币中心页面() {
+    if (textContains("累计任务奖励").exists()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 // 确保在天猫首页
 function atTMHome() {
     if (text("购物车").exists()) {
@@ -488,28 +613,36 @@ function 在支付宝底部界面() {
     }
 }
 
-function 在支付宝首页() {
-    if (text("我的").exists() && text("扫一扫").exists()) {
+function 在淘宝底部界面() {
+    if (desc("搜索").exists()) {
         return true;
     } else {
         return false;
     }
 }
 
-function 在支付宝我的首页() {
-    if (text("支付宝会员").exists() && text("账单").exists()) {
+function 在淘宝喵币任务页面() {
+    if (textContains("天猫双十一，超级星秀猫").exists()) {
         return true;
     } else {
         return false;
     }
 }
 
-function 在支付宝会员首页() {
-    if (text("会员中心").exists() && text("个人中心").exists()) {
+
+function 在直播界面() {
+    if (idContains("taolive_").exists()) {
         return true;
     } else {
         return false;
     }
 }
 
+function isTbTeJia() {
+    if (textContains("淘宝特价版送红包").exists()) {
+        return true;
+    } else {
+        return false;
+    }
+}
 module.exports = AliMB;

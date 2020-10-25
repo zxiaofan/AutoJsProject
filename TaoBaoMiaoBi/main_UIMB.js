@@ -14,10 +14,12 @@ ui.layout(
         <button marginTop="30px" id="kj_about" text="使用说明，必看" textColor="red" />
 
         <horizontal>
-            <checkbox marginLeft="30px" id="kj_select_TMMB" text="打开天猫领喵币" checked="true" />
-            <checkbox marginTop="30px" id="kj_select_ZFBMB" text="打开支付宝领喵币" />
+            <checkbox marginTop="30px" marginLeft="30px" id="kj_select_TMMB" text="打开天猫领喵币" textSize="20sp" checked="true" />
+            <checkbox marginTop="30px" marginLeft="30px" id="kj_select_TBMB" text="打开淘宝领喵币" textSize="20sp" checked="true" />
         </horizontal>
-
+        <horizontal>
+            <checkbox marginLeft="30px" id="kj_select_ZFBMB" text="打开支付宝领喵币" textSize="20sp" />
+        </horizontal>
         <button marginTop="30px" id="kj_all" text="一条龙（点击此处执行）" textColor="red" textSize="20sp" />
         {/* <input marginTop="100px" id="kj_input" text="这是一个输入框" /> */}
 
@@ -38,13 +40,13 @@ toastLog(ui.kj_aboutThis.getText());
 var module_main_funMB = require("./main_funMB.js");
 var module_util = require("./util.js");
 
-
-// this.fun_checkUpdate(version);
+initData();
+this.fun_checkUpdate(version);
 
 ui.kj_findMe.click(() => {
 
     threads.start(function () {
-        let info = "程序将自动打开微信，搜索订阅号zxiaofan，\n\n" +
+        let info = "程序将【自动】打开微信，搜索订阅号zxiaofan，\n\n" +
             "    你可以在这里联系我哟。";
         // toastLog(info);
         var result = dialogs.confirm(info);
@@ -111,7 +113,7 @@ ui.kj_about.click(() => {
         "1、APP需要打开以下权限：无障碍服务权限、后台弹出界面；\n\n" +
         "    权限必须提前打开，否则可能执行失败；\n\n" +
         "    权限必须提前打开！！！\n\n" +
-        "2、更新说明：20201024支持【天猫+支付宝】一键领喵币；\n\n" +
+        "2、更新说明：20201024支持【天猫+淘宝+支付宝】一键领喵币；\n\n" +
         "5、【日志】:\n" +
         "    5.1、如果使用有bug，可在使用后“打开日志窗口”，分析日志；\n\n" +
         "6、作者：公众号【zxiaofan】";
@@ -138,21 +140,29 @@ ui.kj_all.click(() => {
     toastLog("一条龙Starting...");
 
     var thread = threads.start(function () {
-
+        var res;
         if (ui.kj_select_TMMB.isChecked()) {
             // 天猫猫币
             toastLog("[UI]天猫喵币");
 
-            var res = module_main_funMB.main_method("天猫喵币", true);
+            res = module_main_funMB.main_method("天猫喵币", true);
         }
         if (ui.kj_select_ZFBMB.isChecked()) {
             // 支付宝猫币
             toastLog("[UI]支付宝喵币");
-            var res = module_main_funMB.main_method("支付宝喵币", true);
+            res = module_main_funMB.main_method("支付宝喵币", true);
         }
 
+        if (ui.kj_select_TBMB.isChecked()) {
+            // 淘宝猫币
+            toastLog("[UI]淘宝喵币");
+            res = module_main_funMB.main_method("淘宝猫币", true);
+        }
+        res.blockedGet();
 
         toastLog("[End] 一条龙处理完毕");
+
+        dialogs.confirm("喵币已为您领取完毕，请查收；最新版APP请前往公众号【zxiaofan】留言“喵币”获取");
 
     });
     //    thread.join(); // 会卡死的，可能使无障碍服务失效，需要重启手机
@@ -190,6 +200,10 @@ function fun_checkUpdate(version) {
     });
 }
 
+function initData() {
+    // var storage = storages.create("zxiaofan:ant");
+    module_util.getUid("miaobi");
+}
 function resetUIData() {
     var storage = storages.create("zxiaofan:ant");
 
