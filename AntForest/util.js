@@ -82,28 +82,28 @@ util.readFile = function readFile(filePath) {
     return content;
 }
 
-util.createUid = function createUid() {
+util.createUid = function createUid(sign) {
     var random1 = random(10, 999);
     if (random1 < 99) {
         random1 = "0" + random1;
     }
-    return "uid" + this.getYYYYMMddHHmmssS() + random1;
+    return sign + "uid" + this.getYYYYMMddHHmmssS() + random1;
 }
 
 
-util.getUid = function getUid() {
-    var storage = storages.create("zxiaofan:ant");
+util.getUid = function getUid(sign) {
+    var storage = storages.create("zxiaofan:" + sign);
     var uid = storage.get("uid");
     if (uid) {
         return uid;
     }
-    var cachePath = "/sdcard/antforest/cache.txt";
+    var cachePath = "/sdcard/" + sign + "/cache.txt";
     uid = this.readFile(cachePath);
     if (uid != "" && uid != "NULL") {
         storage.put("uid", uid);
         return uid;
     }
-    uid = this.createUid();
+    uid = this.createUid(sign);
     storage.put("uid", uid);
     files.createWithDirs(cachePath);
     files.write(cachePath, uid);

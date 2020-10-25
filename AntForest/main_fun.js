@@ -76,8 +76,9 @@ main_fun.main_method = function main_method(method, boolThread, waterThreshold, 
             var dis_result1 = threads.disposable();
             var thread = threads.start(function () {
                 AliPay.fun_ant_main(waterThreshold, waterPlanNum, waterMinUnit);
+                dis_result1.setAndNotify(1);
             });
-            dis_result1.setAndNotify(1);
+            dis_result1.blockedGet();
             return dis_result1;
         } else {
             AliPay.fun_ant_main(waterThreshold, waterPlanNum, waterMinUnit);
@@ -87,8 +88,9 @@ main_fun.main_method = function main_method(method, boolThread, waterThreshold, 
             var dis_result4 = threads.disposable();
             var thread = threads.start(function () {
                 AliPay.领积分();
+                dis_result4.setAndNotify(4);
             });
-            dis_result4.setAndNotify(4);
+            dis_result4.blockedGet();
             return dis_result4;
         } else {
             AliPay.领积分();
@@ -98,8 +100,9 @@ main_fun.main_method = function main_method(method, boolThread, waterThreshold, 
             var dis_result3 = threads.disposable();
             var thread = threads.start(function () {
                 fun_getTaoBaoNengLiang_main();
+                dis_result3.setAndNotify(3);
             });
-            dis_result3.setAndNotify(3);
+            dis_result3.blockedGet();
             return dis_result3;
         } else {
             fun_getTaoBaoNengLiang_main();

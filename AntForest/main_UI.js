@@ -1,8 +1,8 @@
 "ui";
 var height = device.height;
 var width = device.width;
-var version = "202010062200";
-var versionDesc = "逻辑优化，支持逛一逛收能量";
+var version = "202010252100";
+var versionDesc = "逻辑优化，支持2020年10月版支付宝";
 
 var main = {};
 ui.layout(
@@ -145,7 +145,7 @@ ui.kj_about.click(() => {
         "1、APP需要打开以下权限：无障碍服务权限、后台弹出界面；\n\n" +
         "    权限必须提前打开，否则可能执行失败；\n\n" +
         "    权限必须提前打开！！！\n\n" +
-        "2、更新说明：20201006支持逛一逛收能量；\n\n" +
+        "2、更新说明：逻辑优化，支持2020年10月版支付宝；\n\n" +
         "3、【支付宝会员领积分】:\n" +
         // "    2.1、浏览店铺领喵币；\n" +
         // "    2.2、天降喵币；\n" +
@@ -153,10 +153,8 @@ ui.kj_about.click(() => {
         // "    2.4、领喵币主页签到；\n" +
         // "    2.5、开心农场签到（需手动领喵币）；\n\n" +
         "4、【蚂蚁森林能量】:\n" +
-        "    4.1、收取蚂蚁森林能量需要申请截图权限，弹出提示框时同意即可；\n\n" +
-        "    4.2、基于控件坐标位置收取能量，适用于所有分辨率的手机；\n\n" +
-        "    4.3、支持收取能量同时给好友浇水（默认每收取该好友30g能量，则浇水10g）；\n\n" +
-        "    4.4、收能量已改版，每天最多浇水3次，实际浇水优先级：66g>33g>18g>10g；\n\n" +
+        "    4.1、支持收取能量同时给好友浇水（默认每收取该好友30g能量，则浇水10g）；\n\n" +
+        "    4.2、收能量已改版，每天最多浇水3次，实际浇水优先级：66g>33g>18g>10g；\n\n" +
         "        如计划浇水10g，则实际浇水10g 1次；计划浇水30g，则实际浇水18g1次+10g1次；\n\n" +
         "        计划浇水80g，则实际浇水66g1次+10g1次；\n\n" +
 
@@ -206,25 +204,10 @@ ui.kj_checkUpdate.click(() => {
 ui.kj_all.click(() => {
     toastLog("一条龙Starting...");
 
-    // var thread = threads.start(function () {
-    //     // 收取蚂蚁森林能量
-    //     if(ui.kj_select_ant.isChecked()){
-    //         var dis_result =  module_main_fun.ant_main(999);
-    //         toastLog("收拾收拾...");
-    //         dis_result.blockedGet();
-    //         toastLog("搜索 asas拾...");
 
-    //     }
-
-    // // 收取蚂蚁森林能量-浇水
-    // if(ui.kj_select_water.isChecked()){
-    //     toastLog("ui.kj_select_water.");
-    //     var dis_result =  module_main_fun.ant_main(ui.kj_HiAntCount.getText());
-    //     dis_result.blockedGet();
-    // }
     setStorageData();
     var thread = threads.start(function () {
-
+        var res;
         if (ui.kj_select_显示悬浮窗.isChecked()) {
             console.hide();
             toastLog("[Start]" + ui.kj_select_显示悬浮窗.getText());
@@ -233,27 +216,27 @@ ui.kj_all.click(() => {
         // 收取蚂蚁森林能量
         if (ui.kj_select_ant.isChecked()) {
             toastLog("[Start]" + ui.kj_select_ant.getText());
-            module_main_fun.main_method("蚂蚁森林", false, 999, 0);
+            res = module_main_fun.main_method("蚂蚁森林", false, 999, 0);
         }
 
         // 收取蚂蚁森林能量-浇水
         if (ui.kj_select_water.isChecked()) {
             toastLog("[Start]" + ui.kj_select_water.getText());
             toastLog("每收取好友" + ui.kj_waterThreshold.getText() + "g能量浇水" + ui.kj_waterPlanNum.getText() + "g。");
-            module_main_fun.main_method("蚂蚁森林", false, ui.kj_waterThreshold.getText(), ui.kj_waterPlanNum.getText(), ui.kj_waterMinUnit.getText());
+            res = module_main_fun.main_method("蚂蚁森林", false, ui.kj_waterThreshold.getText(), ui.kj_waterPlanNum.getText(), ui.kj_waterMinUnit.getText());
         }
         if (ui.kj_select_领取支付宝积分.isChecked()) {
             toastLog("[Start]" + ui.kj_select_领取支付宝积分.getText());
-            module_main_fun.main_method("支付宝会员积分", false, version, 0);
+            res = module_main_fun.main_method("支付宝会员积分", false, version, 0);
         }
 
         // if(ui.kj_select_收取淘宝双十二能量.isChecked()){
         //     toastLog("[Start]"+ui.kj_select_收取淘宝双十二能量.getText());
         //     module_main_fun.main_method("淘宝收能量", false,version);
         // }
-
+        res.blockedGet();
         toastLog("[End] 一条龙处理完毕");
-
+        dialogs.confirm("蚂蚁森林能量已为您收取完毕，请查收；最新版APP请前往公众号【zxiaofan】留言“蚂蚁森林”获取");
     });
     //    thread.join(); // 会卡死的，可能使无障碍服务失效，需要重启手机
 
@@ -279,34 +262,6 @@ ui.kj_gotoGitHub.click(() => {
 });
 
 
-// main.getWaterThreshold = function getWaterThreshold() {
-//     return ui.kj_waterThreshold.getText();
-// };
-
-// main.getWaterPlanNum = function getWaterPlanNum() {
-//     return ui.kj_waterPlanNum.getText();
-// };
-
-// main.getWaterMinUnit = function getWaterMinUnit() {
-//     return ui.kj_waterMinUnit.getText();
-// };
-
-// main.getkj_waterPointX = function getkj_waterPointX() {
-//     return ui.kj_waterPointX.getText();
-// };
-
-// main.getkj_waterPointY = function getkj_waterPointY() {
-//     return ui.kj_waterPointY.getText();
-// };
-
-// main.getkj_friendXmax = function getkj_friendXmax() {
-//     return ui.kj_friendXmax.getText();
-// };
-
-// main.getkj_friendYmax = function getkj_friendYmax() {
-//     return ui.kj_friendYmax.getText();
-// };
-
 function fun_checkUpdate(version) {
     var thread = threads.start(function () {
         var updateResult = module_main_fun.checkUpdate(version);
@@ -327,9 +282,23 @@ function setStorageData() {
     storage.put("kj_waterMinUnit", parseInt(ui.kj_waterMinUnit.getText()));
     // storage.put("kj_waterPointX", parseInt(ui.kj_waterPointX.getText()));
     // storage.put("kj_waterPointY", parseInt(ui.kj_waterPointY.getText()));
-    storage.put("kj_friendXmax", parseInt(ui.kj_friendXmax.getText()));
-    storage.put("kj_friendYmax", parseInt(ui.kj_friendYmax.getText()));
-    // storage.put("a", 123);
+
+    // 收好友的能量：xmin=220, ymin=500, xmax=900, ymax=810；
+    storage.put("kj_xmax", parseInt(ui.kj_friendXmax.getText()));
+    storage.put("kj_ymax", parseInt(ui.kj_friendYmax.getText()));
+    storage.put("kj_xmin", 220);
+    storage.put("kj_ymin", 500);
+
+    storage.put("x_znl", 950);
+    storage.put("y_znl", 1550);
+    storage.put("x_jiaoshui", 750);
+    storage.put("y_jiaoshui", 1550);
+
+    // 我的-支付宝会员
+    storage.put("x_zfbhy", 500);
+    storage.put("y_zfbhy", 500);
+
+
     // console.log(storage.get("a"));
     // console.log(storage.get("kj_waterThreshold"));
     // console.log(getStorage("kj_friendXmax"));
@@ -361,7 +330,7 @@ function initData() {
     if (storage.contains("kj_friendYmax")) {
         ui.kj_friendYmax.setText(storage.get("kj_friendYmax") + "");
     }
-    module_util.getUid();
+    module_util.getUid("ant");
 }
 
 function resetUIData() {
