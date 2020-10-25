@@ -43,7 +43,7 @@ Github更新可能略慢于微信公众号，此外由于总所周知的原因�
 
 [2020双十一AutoJs自动领喵币再次来袭【天猫、淘宝、支付宝】](https://zxiaofan.blog.csdn.net/article/details/109268275)；  
 
-![领喵币界面](http://tc.zxiaofan.com/tc/a/2010/2010double11Home.jpg)
+![领喵币界面](https://tc.zxiaofan.com/tc/a/2010/2010double11Home.jpg?x-oss-process=style/Size90AndSign)
 
 ## 2.2. 支持功能
 ## 2.3. 更新记录
