@@ -1,8 +1,8 @@
 "ui";
 var height = device.height;
 var width = device.width;
-var version = "202010241800";
-var versionDesc = "2020双十一，【天猫+支付宝】一键领喵币再次来袭";
+var version = "202010311800";
+var versionDesc = "2020双十一，【天猫+淘宝】一键领喵币更新，下架支付宝喵币";
 
 var main = {};
 ui.layout(
@@ -17,9 +17,9 @@ ui.layout(
             <checkbox marginTop="30px" marginLeft="30px" id="kj_select_TMMB" text="打开天猫领喵币" textSize="20sp" checked="true" />
             <checkbox marginTop="30px" marginLeft="30px" id="kj_select_TBMB" text="打开淘宝领喵币" textSize="20sp" checked="true" />
         </horizontal>
-        <horizontal>
+        {/* <horizontal>
             <checkbox marginLeft="30px" id="kj_select_ZFBMB" text="打开支付宝领喵币" textSize="20sp" />
-        </horizontal>
+        </horizontal> */}
         <button marginTop="30px" id="kj_all" text="一条龙（点击此处执行）" textColor="red" textSize="20sp" />
         {/* <input marginTop="100px" id="kj_input" text="这是一个输入框" /> */}
 
@@ -113,7 +113,7 @@ ui.kj_about.click(() => {
         "1、APP需要打开以下权限：无障碍服务权限、后台弹出界面；\n\n" +
         "    权限必须提前打开，否则可能执行失败；\n\n" +
         "    权限必须提前打开！！！\n\n" +
-        "2、更新说明：20201024支持【天猫+淘宝+支付宝】一键领喵币；\n\n" +
+        "2、更新说明：20201031【天猫+淘宝】一键领喵币 更新啦；\n\n" +
         "5、【日志】:\n" +
         "    5.1、如果使用有bug，可在使用后“打开日志窗口”，分析日志；\n\n" +
         "6、作者：公众号【zxiaofan】";
@@ -147,11 +147,11 @@ ui.kj_all.click(() => {
 
             res = module_main_funMB.main_method("天猫喵币", true);
         }
-        if (ui.kj_select_ZFBMB.isChecked()) {
-            // 支付宝猫币
-            toastLog("[UI]支付宝喵币");
-            res = module_main_funMB.main_method("支付宝喵币", true);
-        }
+        // if (ui.kj_select_ZFBMB.isChecked()) {
+        //     // 支付宝猫币
+        //     toastLog("[UI]支付宝喵币");
+        //     res = module_main_funMB.main_method("支付宝喵币", true);
+        // }
 
         if (ui.kj_select_TBMB.isChecked()) {
             // 淘宝猫币

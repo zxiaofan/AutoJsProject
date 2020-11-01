@@ -77,7 +77,7 @@ AliMB.fun_ZFBMB = function fun_ZFBMB() {
     while (!在支付宝底部界面() && !在支付宝喵币任务页面()) {
         toastLog("还没进入支付宝首页呢...");
         sleep(2000);
-        back();
+        // back();
     }
     goto_zfbmb();
     while (!在支付宝喵币任务页面()) {
@@ -156,8 +156,8 @@ function goto_tmmb() {
     scrollUp();
     toastLog("【Start】准备天猫“天猫双十一，超级星秀猫”");
     sleep(1000);
-    var x_cjxxm = 300;
-    var y_cjxxm = 1200;
+    var x_cjxxm = 150;
+    var y_cjxxm = 1300;
     toastLog("[坐标]超级星秀猫：" + x_cjxxm + "," + y_cjxxm);
     click(x_cjxxm, y_cjxxm);
     sleep(1000);
@@ -183,7 +183,7 @@ function goto_tbmb() {
     toastLog("【Start】准备淘宝“天猫双十一，超级星秀猫”");
     sleep(1000);
     var x_cjxxm = 800;
-    var y_cjxxm = 800;
+    var y_cjxxm = 1300;
     toastLog("[坐标]超级星秀猫：" + x_cjxxm + "," + y_cjxxm);
     click(x_cjxxm, y_cjxxm);
     sleep(1000);
@@ -214,19 +214,12 @@ function getZFBMbBySign() {
 function getTMMbByLiuLanDP() {
     toastLog("【Start】浏览店铺领喵币");
 
-    var 位置_下滑店铺得更多喵币 = textContains("下滑店铺得更多喵币").findOnce();
-    if (位置_下滑店铺得更多喵币 == null) {
-        toastLog("自动进入【领喵币中心】失败，请手动进入");
-    } else {
-        toastLog(位置_下滑店铺得更多喵币.bounds());
-        toastLog("[计算坐标]下滑店铺得更多喵币");
-        sleep(200);
-        x_llb = width - 100;
-        y_llb = 位置_下滑店铺得更多喵币.bounds().centerY() - 100;
-        toastLog("[坐标]领喵币：" + x_llb + "," + y_llb);
-        click(x_llb, y_llb);
-        sleep(500);
-    }
+    x_llb = 950;
+    y_llb = 1800;
+    toastLog("[坐标]领喵币：" + x_llb + "," + y_llb);
+    click(x_llb, y_llb);
+    sleep(500);
+
     // 进入【领喵币中心】
     while (!在天猫领喵币中心页面()) {
         toastLog("还没进入天猫【领喵币中心】呢...");
@@ -247,19 +240,12 @@ function getTMMbByLiuLanDP() {
 function getTBMbByLiuLanDP() {
     toastLog("【Start】浏览店铺领喵币");
 
-    var 位置_下滑店铺得更多喵币 = textContains("下滑店铺得更多喵币").findOnce();
-    if (位置_下滑店铺得更多喵币 == null) {
-        toastLog("自动进入【领喵币中心】失败，请手动进入");
-    } else {
-        toastLog(位置_下滑店铺得更多喵币.bounds());
-        toastLog("[计算坐标]下滑店铺得更多喵币");
-        sleep(200);
-        x_llb = width - 100;
-        y_llb = 位置_下滑店铺得更多喵币.bounds().centerY() - 100;
-        toastLog("[坐标]领喵币：" + x_llb + "," + y_llb);
-        click(x_llb, y_llb);
-        sleep(500);
-    }
+    x_llb = 950;
+    y_llb = 1800;
+    toastLog("[坐标]领喵币：" + x_llb + "," + y_llb);
+    click(x_llb, y_llb);
+    sleep(500);
+
     // 进入【领喵币中心】
     while (!在淘宝领喵币中心页面()) {
         toastLog("还没进入淘宝【领喵币中心】呢...");
@@ -309,9 +295,10 @@ function getTMMbjx() {
     toastLog("【Start】准备领惊喜喵币礼包");
     click("领取");
     sleep(500);
+    click("领取奖励");
     toastLog("【End】领惊喜喵币礼包");
     sleep(500);
-
+    click("领取奖励");
 }
 
 // 每日签到领喵币
@@ -319,6 +306,7 @@ function getTMMbQD() {
     toastLog("【Start】准备每日签到领喵币");
     click("签到");
     sleep(500);
+    click("签到");
     toastLog("【End】每日签到领喵币");
     sleep(500);
 }
@@ -345,6 +333,7 @@ function getTMMbQuLiuLan(sign, source) {
     while (count < countMax) {
         click("好的，我知道了");
         click("开心收下，喵");
+        click("领取奖励");
         sleep(1000);
         var 去浏览 = textContains(sign).findOnce();
         if ("去完成" == sign) {

@@ -25,6 +25,7 @@ AliPay.fun_ant_main = function fun_ant_main(waterThreshold, waterPlanNum, waterM
     util.registEvent();
     while (!在蚂蚁森林任务页面()) {
         toastLog("还没进入蚂蚁森林任务页面呢...");
+        goto_ant();
         sleep(2000);
     }
     toast("进入蚂蚁森林任务页面");
@@ -71,6 +72,9 @@ AliPay.fun_ant_main = function fun_ant_main(waterThreshold, waterPlanNum, waterM
 
 // 收能量-找能量
 function getEnergyByZhaoNengLiang(jiaoshuiAll) {
+    var count2 = 3;
+
+
     setScreenMetrics(width, height);
     // 连点2次，避免挂件影响
     click(util.getStorage("x_znl"), util.getStorage("y_znl"));
@@ -122,6 +126,19 @@ function getEnergyByZhaoNengLiang(jiaoshuiAll) {
         sleep(1000);
 
         getEnergyByZhaoNengLiang(jiaoshuiAll);
+    } else if (!在好友的蚂蚁森林页面() && !在蚂蚁森林任务页面()) {
+        toastLog("当前不在自己或者好友的蚂蚁森林页面呢，请尽快切换到蚂蚁森林页面...");
+        sleep(2000);
+        var count1 = 3;
+        while (!在好友的蚂蚁森林页面() && !在蚂蚁森林任务页面() && count1 > 0) {
+            back();
+            sleep(1000);
+            count1--;
+        }
+        if (在好友的蚂蚁森林页面() || 在蚂蚁森林任务页面()) {
+            getEnergyByZhaoNengLiang(jiaoshuiAll)
+        }
+
     } else {
         toastLog("[找能量]暂未发现可收取能量");
         return false;
@@ -233,7 +250,18 @@ function getHelpMeNum() {
     return result;
 }
 function getTaTotal() {
-    var getTa = parseInt(getFromTaNum()) + parseInt(getHelpTaNum());
+    var getTa = 0;
+    try {
+        getTa = parseInt(getFromTaNum()) + parseInt(getHelpTaNum());
+    } catch (error) {
+        try {
+            sleep(1000);
+            getTa = parseInt(getFromTaNum()) + parseInt(getHelpTaNum());
+        } catch (error2) {
+            toastLog("[error]计算收取好友能量数量失败，再次计算");
+        }
+    }
+
     return getTa;
 }
 
@@ -256,6 +284,14 @@ function getEnergyByClickAllRegion(type) {
             // console.log("col:"+col+",row:"+row);
             click(x1, y1);
             sleep(30);
+            if (!(在好友的蚂蚁森林页面() || 在蚂蚁森林任务页面())) {
+                sleep(500);
+                if (!(在好友的蚂蚁森林页面() || 在蚂蚁森林任务页面())) {
+                    toastLog("当前不在自己或者好友的蚂蚁森林，立即返回");
+                    back();
+                    sleep(1000);
+                }
+            }
         }
     }
     sleep(1000);
